@@ -4,7 +4,7 @@ import numpy as np
 import os
 import tensorflow as tf
 from sklearn.metrics import precision_recall_fscore_support, classification_report, confusion_matrix
-tf.logging.set_verbosity(tf.logging.ERROR)
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from .data_utils import minibatches, pad_sequences, get_chunks, PAD
 from .general_utils import Progbar

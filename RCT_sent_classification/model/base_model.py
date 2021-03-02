@@ -1,6 +1,6 @@
 import os
 import tensorflow as tf
-tf.logging.set_verbosity(tf.logging.ERROR)
+tf.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 '''
 modified from https://github.com/jind11/HSLN-Joint-Sentence-Classification
 '''

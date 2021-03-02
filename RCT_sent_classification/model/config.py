@@ -14,12 +14,14 @@ class Config():
                 np array, else None
 
         """
+        
+        
         ## parse args
         self.parser = parser
         # training parameters
-        parser.add_argument('--raw_dir',default='test', type=str,
+        parser.add_argument('--text_dir', type=str,
                 help = "raw abstract txt file folder")
-        parser.add_argument('--sents_dir',default="sents",type=str,
+        parser.add_argument('--sents_dir',type=str,
                 help = "output dir to save all tagged sents")
 
         

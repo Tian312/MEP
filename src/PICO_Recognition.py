@@ -13,25 +13,21 @@ from __future__ import print_function
 import warnings
 warnings.filterwarnings("ignore")
 import collections,codecs,os,sys,re,pickle
-from nltk.tokenize import word_tokenize,sent_tokenize
-#from general_utils import formalization,tf_metrics
+
+import spacy
+nlp = spacy.load("en_core_sci_lg")  
 from parser_config import Config
 config=Config()
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
-tf.logging.set_verbosity(tf.logging.ERROR)
-tf.logging.info('TensorFlow')
-#from tensorflow.python.util import deprecation as deprecation
-#deprecation._PRINT_DEPRECATION_WARNINGS = False
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from bert import modeling
 from bert import optimization
 from bert import tokenization
+os.environ['CUDA_VISIBLE_DEVICES']='2,3'
 
-flags = tf.flags
-FLAGS = flags.FLAGS
-
-max_seq_length= 128
+max_seq_length= config.max_seq_length
 do_train = False
 do_eval = False
 do_predict = True
@@ -60,7 +56,8 @@ class InputExample(object):
 class InputFeatures(object):
     """A single set of features of data."""
 
-    def __init__(self, input_ids, input_mask, segment_ids, label_ids, ):
+    def __init__(self, input_ids, input_mask, segment_ids, label_ids,ntokens ):
+        self.ntokens = ntokens
         self.input_ids = input_ids
         self.input_mask = input_mask
         self.segment_ids = segment_ids
@@ -72,7 +69,12 @@ class DataProcessor(object):
     @classmethod
     def raw2conll(self,raw_text):
         conll = []
-        words = word_tokenize(raw_text)
+ 
+        #raw_text = re.sub("-"," - ",raw_text)
+        #raw_text = re.sub("/"," / ",raw_text)
+        #raw_text = re.sub("\sv\.?\s?s\.\s"," vs ",raw_text)
+        doc = nlp(raw_text)
+        words = [sent.string.strip() for sent in doc]
         words =[[w,"O"] for w in words]
         conll.extend(words)
         conll.append([""])
@@ -82,15 +84,23 @@ class DataProcessor(object):
     def txt2conll(self, data_dir):
         conll = []
         raw_text = codecs.open(data_dir).read()
+
+        #raw_text = re.sub("-"," - ",raw_text)
+        raw_text = re.sub("\+/-"," +/- ",raw_text)
+        raw_text = re.sub("/"," / ",raw_text)
+        #raw_text = re.sub("\sv\.?\s?s\.\s"," vs ",raw_text)
+        doc = nlp(raw_text)
         if re.search("\.sents$",data_dir):
             sents = raw_text.split("\n")
-        else:
-            sents = sent_tokenize(raw_text)
+        else:        
+            sents = doc.sents
         for sent in sents:
-            if re.search("\w+\s+-\s+\w+",sent):
-                sent = re.sub("\s+-\s+","-",sent)
-
-            words = word_tokenize(sent) 
+            try: 
+                sent = sent.string.strip()
+            except:
+                sent = sent
+            
+            words =re.split("\s+",sent)
 
             words =[[w,"O"] for w in words]     
             conll.extend(words)
@@ -142,10 +152,27 @@ class DataProcessor(object):
 
             word = line[0]
             label = line[-1]
+            if re.search("^\.\d+$",word):
+                word = "0" + word
             words.append(word)
             labels.append(label)
         
         return lines
+
+def txt2ntokens(text, tokenizer):
+    textlist= text.split(" ")
+    tokens = []
+    for i, word in enumerate(textlist):
+        token = tokenizer.tokenize(word)
+        tokens.extend(token)
+    if len(tokens) >= int(max_seq_length) - 1:
+        tokens = tokens[0:(max_seq_length - 2)]
+    ntokens = []
+    ntokens.append("[CLS]")
+    for i, token in enumerate(tokens):
+        ntokens.append(token)
+    ntokens.append("[SEP]")
+    return ntokens
 
 class BC5CDRProcessor(DataProcessor):
     
@@ -247,7 +274,7 @@ class BC5CDRProcessor(DataProcessor):
 
         return input_fn
 
-    def result_to_pair_for_return(self, predict_examples, predictions, id2label):
+    def result_to_pair_for_return(self, predict_examples, predictions, id2label,tokenizer):
         """
         Args:
             predict_examples (list): InputExample, no X
@@ -262,8 +289,8 @@ class BC5CDRProcessor(DataProcessor):
 
         for predict_line, pred_ids in zip(predict_examples, predictions):
             words = str(predict_line.text).split(' ')
+            ntokens = txt2ntokens(predict_line.text, tokenizer)
             labels = str(predict_line.label).split(' ')
-
             if len(words) != len(labels):
                 tf.logging.error('Text and label not equal')
 
@@ -273,31 +300,39 @@ class BC5CDRProcessor(DataProcessor):
             length = 0
             # get from CLS to SEP
             pred_labels = []
-            for id in pred_ids:
+            pred_words = []
+            
+            for id,tok in zip(pred_ids, ntokens):
                 
-                #print (curr_label)
                 if id == 0:
                     continue
-                curr_label = id2label[id] 
+                curr_label = id2label[id]
+                
+                #print (tok, curr_label)
+
                 if curr_label == '[CLS]':
                     continue
                 elif curr_label == '[SEP]':
                     break
                 elif curr_label == 'X':
+                    tok = re.sub("^##","",tok)
+                    pred_words[-1]=pred_words[-1]+tok
                     continue
                 pred_labels.append(curr_label)
-            
+                pred_words.append(tok)
+            #print ("\n=======\n") 
             
             if len(pred_labels) > len(words):
                 pred_labels = pred_labels[:len(words)]
             elif len(pred_labels) < len(words):
                 pred_labels += ['O'] * (len(words) - len(pred_labels))
             
-            words_all.append(words)
+            words_all.append(pred_words)
             preds_all.append(pred_labels)
             
 
         return words_all, preds_all
+
 
 def convert_single_example(ex_index, example, label_list, max_seq_length, tokenizer, mode, output_dir):
     label_map = {}
@@ -373,6 +408,7 @@ def convert_single_example(ex_index, example, label_list, max_seq_length, tokeni
         input_mask=input_mask,
         segment_ids=segment_ids,
         label_ids=label_ids,
+        ntokens=ntokens
         # label_mask = label_mask
     )
     # write_tokens(ntokens, label_ids, mode)
@@ -523,9 +559,7 @@ def result_to_pair(predict_examples, predictions, id2label, output_predict_file,
         for predict_line, pred_ids in zip(predict_examples, predictions):
             words = str(predict_line.text).split(' ')
             labels = str(predict_line.label).split(' ')
-            
-            
-            
+          
             if len(words) != len(labels):
                 tf.logging.error('Text and label not equal')
                 tf.logging.error(predict_line.text)
@@ -572,12 +606,14 @@ def result_to_pair(predict_examples, predictions, id2label, output_predict_file,
                 err_writer.write(' '.join([id2label.get(i, '**NULL**') for i in pred_ids]) + '\n\n')
                 pred_labels += ['O'] * (len(words) - len(pred_labels))
 
-            for tok, label, pred_label in zip(words, labels, pred_labels):
-                writer.write(tok + ' ' + label + ' ' + pred_label + '\n')
-            writer.write('\n')
+            #for tok, label, pred_label in zip(words, labels, pred_labels):
+            #    print(tok + ' ' + label + ' ' + pred_label) 
+            #    writer.write(tok + ' ' + label + ' ' + pred_label + '\n')
+            #writer.write('\n')
 
 
 
+    
 class PICO():
     def __init__(self):
         """

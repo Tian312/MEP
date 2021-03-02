@@ -1,0 +1,538 @@
+{
+    "doc_id": "33170938",
+    "type of study": "Therapy",
+    "title": "",
+    "abstract": "TITLE: A New Dual-cure Universal Simplified Adhesive: 18-month Randomized Multicenter  Clinical Trial.\nCLINICAL RELEVANCE: Non-carious cervical lesion restorations using a dual-cure  universal adhesive in self-etch and etch-and-rinse mode showed satisfactory  clinical performance after 18 months.\nSUMMARY: Objectives: The objective of this multicenter, double-blind,  split-mouth randomized clinical trial was to evaluate the clinical performance  of a new dual-cure universal adhesive system (Futurabond U, Voco GmBH) when  applied using different strategies over a period of 18 months.\nMethods and  Materials: Fifty patients participated in this study.\nTwo hundred non-carious  cervical lesions were restored using the adhesive Futurabond U according to four  adhesive strategies (n=50 per group): only self-etch (SEE), selective enamel  etching + self-etch (SET), etch-and-rinse with dry dentin (ERDry), and  etch-and-rinse with wet dentin (ERWet).\nAfter the adhesive application, cavities  were restored using Admira Fusion composite resin.\nThese restorations were  evaluated according to FDI World Dental Federation criteria for the following  characteristics: retention/fracture, marginal adaptation, marginal staining,  postoperative sensitivity, and caries recurrence.\nResults: After 18 months, only  four patients (12 months: one patient, n=4 restorations; and 18 months: three  patients, n=12 restorations) were not evaluated.\nFourteen restorations were lost  after 18 months of clinical evaluation (four for SEE, three for SET, three for  ERDry, and four for ERWet).\nThe retention rates for 18 months (95% confidence  interval) were 92% (81%-97%) for SEE, 94% (83%-97%) for SET, 94% (83%-97%) for  ERDry, and 92% (81%-97%) for ERWet (p>0.05).\nThirty-eight restorations were  considered to have minor discrepancies in marginal adaptation at the 18-month  recall (13 for SEE, 13 for SET, six for ERDry, and six for ERWet; p>0.05).\nFourteen restorations were detected as a minor marginal discoloration at the  18-month recall (six for SEE, six for SET, one for ERDry, and one for ERWet;  p>0.05).\nHowever, all were considered clinically acceptable.\nNo restorations  showed postoperative sensitivity or caries recurrence at the time.\nConclusion:  The clinical performance of the Futurabond U did not depend on the bonding  strategy used, and it was considered reliable after 18 months of clinical  evaluation, although more marginal discrepancy was observed in the self-etch  group.\n",
+    "Evidence Map": {
+        "study design": {
+            "Participant": "",
+            "Intervention": "",
+            "Outcome": "",
+            "Hypothesis": ""
+        },
+        "study results": ""
+    },
+    "Sentence-level breakdown": [
+        {
+            "Section": "TITLE",
+            "Text": "TITLE : A New Dual-cure Universal Simplified Adhesive : 18-month Randomized Multicenter Clinical Trial .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [
+                    {
+                        "term": "Dual-cure Universal Simplified Adhesive",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Cure (remedy)",
+                            "cui": "C1880198"
+                        },
+                        "start": 14,
+                        "end": 53
+                    }
+                ],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "BACKGROUND",
+            "Text": "CLINICAL RELEVANCE : Non-carious cervical lesion restorations using a dual-cure universal adhesive in self-etch and etch-and-rinse mode showed satisfactory clinical performance after 18 months .",
+            "Evidence Elements": {
+                "Participant": [
+                    {
+                        "term": "Non-carious cervical lesion restorations",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Dental caries",
+                            "cui": "C0011334"
+                        },
+                        "start": 21,
+                        "end": 61
+                    }
+                ],
+                "Intervention": [
+                    {
+                        "term": "dual-cure universal adhesive",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Cure (remedy)",
+                            "cui": "C1880198"
+                        },
+                        "start": 70,
+                        "end": 98
+                    }
+                ],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "OBJECTIVE",
+            "Text": "SUMMARY : Objectives : The objective of this multicenter , double-blind , split-mouth randomized clinical trial was to evaluate the clinical performance of a new dual-cure universal adhesive system ( Futurabond U , Voco GmBH ) when applied using different strategies over a period of 18 months .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [
+                    {
+                        "term": "dual-cure universal adhesive system",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Cure (remedy)",
+                            "cui": "C1880198"
+                        },
+                        "start": 162,
+                        "end": 197
+                    },
+                    {
+                        "term": "Futurabond U",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Unit",
+                            "cui": "C0439148"
+                        },
+                        "start": 200,
+                        "end": 212
+                    }
+                ],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "METHODS",
+            "Text": "Methods and Materials : Fifty patients participated in this study .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "METHODS",
+            "Text": "Two hundred non-carious cervical lesions were restored using the adhesive Futurabond U according to four adhesive strategies ( n = 50 per group ) : only self-etch ( SEE ) , selective enamel etching + self-etch ( SET ) , etch-and-rinse with dry dentin ( ERDry ) , and etch-and-rinse with wet dentin ( ERWet ) .",
+            "Evidence Elements": {
+                "Participant": [
+                    {
+                        "term": "non-carious cervical lesions",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Dental caries",
+                            "cui": "C0011334"
+                        },
+                        "start": 12,
+                        "end": 40
+                    }
+                ],
+                "Intervention": [
+                    {
+                        "term": "Futurabond U",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Unit",
+                            "cui": "C0439148"
+                        },
+                        "start": 74,
+                        "end": 86
+                    },
+                    {
+                        "term": "self-etch ( SEE )",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "self-etch",
+                            "cui": "1"
+                        },
+                        "start": 153,
+                        "end": 170
+                    },
+                    {
+                        "term": "selective enamel etching + self-etch ( SET )",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "self-etch",
+                            "cui": "1"
+                        },
+                        "start": 173,
+                        "end": 217
+                    }
+                ],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "METHODS",
+            "Text": "After the adhesive application , cavities were restored using Admira Fusion composite resin .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [],
+                "Outcome": [
+                    {
+                        "term": "cavities",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Body cavities",
+                            "cui": "C0333343"
+                        },
+                        "start": 33,
+                        "end": 41
+                    }
+                ]
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "METHODS",
+            "Text": "These restorations were evaluated according to FDI World Dental Federation criteria for the following characteristics : retention / fracture , marginal adaptation , marginal staining , postoperative sensitivity , and caries recurrence .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [],
+                "Outcome": [
+                    {
+                        "term": "restorations",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": null,
+                            "cui": null
+                        },
+                        "start": 6,
+                        "end": 18
+                    },
+                    {
+                        "term": "fracture",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Fracture",
+                            "cui": "C0016658"
+                        },
+                        "start": 132,
+                        "end": 140
+                    },
+                    {
+                        "term": "marginal adaptation",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Acclimatization",
+                            "cui": "C0000934"
+                        },
+                        "start": 143,
+                        "end": 162
+                    },
+                    {
+                        "term": "marginal staining",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Staining (finding)",
+                            "cui": "C1704680"
+                        },
+                        "start": 165,
+                        "end": 182
+                    },
+                    {
+                        "term": "postoperative",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Postoperative Period",
+                            "cui": "C0032790"
+                        },
+                        "start": 185,
+                        "end": 198
+                    }
+                ]
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "RESULTS",
+            "Text": "Results : After 18 months , only four patients ( 12 months : one patient , n = 4 restorations ; and 18 months : three patients , n = 12 restorations ) were not evaluated .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "RESULTS",
+            "Text": "Fourteen restorations were lost after 18 months of clinical evaluation ( four for SEE , three for SET , three for ERDry , and four for ERWet ) .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [
+                    {
+                        "term": "SEE",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "See",
+                            "cui": "C1947903"
+                        },
+                        "start": 82,
+                        "end": 85
+                    },
+                    {
+                        "term": "SET",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Set (Psychology)",
+                            "cui": "C0036849"
+                        },
+                        "start": 98,
+                        "end": 101
+                    },
+                    {
+                        "term": "ERDry",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": null,
+                            "cui": null
+                        },
+                        "start": 114,
+                        "end": 119
+                    }
+                ],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "RESULTS",
+            "Text": "The retention rates for 18 months ( 95 % confidence interval ) were 92 % ( 81 %-97 % ) for SEE , 94 % ( 83 %-97 % ) for SET , 94 % ( 83 %-97 % ) for ERDry , and 92 % ( 81 %-97 % ) for ERWet ( p > 0.05 ) .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [
+                    {
+                        "term": "SEE",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "See",
+                            "cui": "C1947903"
+                        },
+                        "start": 91,
+                        "end": 94
+                    }
+                ],
+                "Outcome": [
+                    {
+                        "term": "retention rates",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Rate",
+                            "cui": "C1521828"
+                        },
+                        "start": 4,
+                        "end": 19
+                    }
+                ]
+            },
+            "Evidence Propositions": [
+                {
+                    "Intervention": "SEE",
+                    "Observation": "92 % ( 81 %-97 % )",
+                    "Outcome": "retention rates",
+                    "Count": ""
+                }
+            ]
+        },
+        {
+            "Section": "RESULTS",
+            "Text": "Thirty-eight restorations were considered to have minor discrepancies in marginal adaptation at the 18-month recall ( 13 for SEE , 13 for SET , six for ERDry , and six for ERWet ; p > 0.05 ) .",
+            "Evidence Elements": {
+                "Participant": [
+                    {
+                        "term": "restorations",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": null,
+                            "cui": null
+                        },
+                        "start": 13,
+                        "end": 25
+                    }
+                ],
+                "Intervention": [
+                    {
+                        "term": "SEE",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "See",
+                            "cui": "C1947903"
+                        },
+                        "start": 125,
+                        "end": 128
+                    },
+                    {
+                        "term": "SET",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Set (Psychology)",
+                            "cui": "C0036849"
+                        },
+                        "start": 138,
+                        "end": 141
+                    },
+                    {
+                        "term": "ERDry",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": null,
+                            "cui": null
+                        },
+                        "start": 152,
+                        "end": 157
+                    }
+                ],
+                "Outcome": [
+                    {
+                        "term": "marginal adaptation",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Acclimatization",
+                            "cui": "C0000934"
+                        },
+                        "start": 73,
+                        "end": 92
+                    }
+                ]
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "RESULTS",
+            "Text": "Fourteen restorations were detected as a minor marginal discoloration at the 18-month recall ( six for SEE , six for SET , one for ERDry , and one for ERWet ; p > 0.05 ) .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [
+                    {
+                        "term": "SEE",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "See",
+                            "cui": "C1947903"
+                        },
+                        "start": 103,
+                        "end": 106
+                    },
+                    {
+                        "term": "SET",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Set (Psychology)",
+                            "cui": "C0036849"
+                        },
+                        "start": 117,
+                        "end": 120
+                    },
+                    {
+                        "term": "ERDry",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": null,
+                            "cui": null
+                        },
+                        "start": 131,
+                        "end": 136
+                    }
+                ],
+                "Outcome": []
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "RESULTS",
+            "Text": "However , all were considered clinically acceptable .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [],
+                "Outcome": [
+                    {
+                        "term": "clinically",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": null,
+                            "cui": null
+                        },
+                        "start": 30,
+                        "end": 40
+                    }
+                ]
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "RESULTS",
+            "Text": "No restorations showed postoperative sensitivity or caries recurrence at the time .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [],
+                "Outcome": [
+                    {
+                        "term": "postoperative sensitivity",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Antimicrobial susceptibility",
+                            "cui": "C0427965"
+                        },
+                        "start": 23,
+                        "end": 48
+                    },
+                    {
+                        "term": "caries recurrence",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Recurrence",
+                            "cui": "C0034897"
+                        },
+                        "start": 52,
+                        "end": 69
+                    }
+                ]
+            },
+            "Evidence Propositions": []
+        },
+        {
+            "Section": "CONCLUSIONS",
+            "Text": "Conclusion : The clinical performance of the Futurabond U did not depend on the bonding strategy used , and it was considered reliable after 18 months of clinical evaluation , although more marginal discrepancy was observed in the self-etch group .",
+            "Evidence Elements": {
+                "Participant": [],
+                "Intervention": [
+                    {
+                        "term": "Futurabond U",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Unit",
+                            "cui": "C0439148"
+                        },
+                        "start": 45,
+                        "end": 57
+                    }
+                ],
+                "Outcome": [
+                    {
+                        "term": "clinical performance",
+                        "negation": false,
+                        "UMLS": {
+                            "preferred_name": "Performance",
+                            "cui": "C0597198"
+                        },
+                        "start": 17,
+                        "end": 37
+                    }
+                ]
+            },
+            "Evidence Propositions": [
+                {
+                    "Intervention": "Futurabond U",
+                    "Observation": "reliable",
+                    "Outcome": "clinical performance",
+                    "Count": ""
+                },
+                {
+                    "Intervention": [
+                        "Futurabond U"
+                    ],
+                    "Observation": "more marginal discrepancy",
+                    "Outcome": "",
+                    "Count": ""
+                }
+            ]
+        }
+    ]
+}

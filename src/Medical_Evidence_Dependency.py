@@ -21,92 +21,16 @@ from __future__ import division
 from __future__ import print_function
 
 from itertools import combinations
-import collections
-import csv
-import logging
-import os,re
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import collections,csv,logging, os, re
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['CUDA_VISIBLE_DEVICES']='2,3'
 import tensorflow as tf
-tf.logging.set_verbosity(tf.logging.ERROR)
-tf.logging.info('TensorFlow')
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 from bert import modeling
 from bert import optimization
 from bert import tokenization
 from parser_config import Config
 config=Config()
-
-flags = tf.flags
-FLAGS = flags.FLAGS
-
-## Required parameters
-
-flags.DEFINE_bool(
-        "do_lower_case", True,
-        "Whether to lower case the input text. Should be True for uncased "
-        "models and False for cased models.")
-
-flags.DEFINE_integer(
-        "max_seq_length", 128,
-        "The maximum total input sequence length after WordPiece tokenization. "
-        "Sequences longer than this will be truncated, and sequences shorter "
-        "than this will be padded.")
-
-flags.DEFINE_bool("do_train", False, "Whether to run training.")
-
-flags.DEFINE_bool("do_eval", False, "Whether to run eval on the dev set.")
-
-flags.DEFINE_bool(
-        "do_predict", False,
-        "Whether to run the model in inference mode on the test set.")
-
-flags.DEFINE_integer("train_batch_size", 32, "Total batch size for training.")
-
-flags.DEFINE_integer("eval_batch_size", 8, "Total batch size for eval.")
-
-flags.DEFINE_integer("predict_batch_size", 8, "Total batch size for predict.")
-
-flags.DEFINE_float("learning_rate", 5e-5, "The initial learning rate for Adam.")
-
-flags.DEFINE_float("num_train_epochs", 3.0,
-        "Total number of training epochs to perform.")
-
-flags.DEFINE_float(
-        "warmup_proportion", 0.1,
-        "Proportion of training to perform linear learning rate warmup for. "
-        "E.g., 0.1 = 10% of training.")
-
-flags.DEFINE_integer("save_checkpoints_steps", 1000,
-        "How often to save the model checkpoint.")
-
-flags.DEFINE_integer("iterations_per_loop", 1000,
-        "How many steps to make in each estimator call.")
-
-flags.DEFINE_bool("use_tpu", False, "Whether to use TPU or GPU/CPU.")
-
-tf.flags.DEFINE_string(
-        "tpu_name", None,
-        "The Cloud TPU to use for training. This should be either the name "
-        "used when creating the Cloud TPU, or a grpc://ip.address.of.tpu:8470 "
-        "url.")
-
-tf.flags.DEFINE_string(
-        "tpu_zone", None,
-        "[Optional] GCE zone where the Cloud TPU is located in. If not "
-        "specified, we will attempt to automatically detect the GCE project from "
-        "metadata.")
-
-tf.flags.DEFINE_string(
-        "gcp_project", None,
-        "[Optional] Project name for the Cloud TPU-enabled project. If not "
-        "specified, we will attempt to automatically detect the GCE project from "
-        "metadata.")
-
-tf.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
-
-flags.DEFINE_integer(
-        "num_tpu_cores", 8,
-        "Only used if `use_tpu` is True. Total number of TPU cores to use.")
-
 
 class InputExample(object):
     """A single training/test example for simple sequence classification."""
@@ -280,20 +204,18 @@ class BlueBERTProcessor(DataProcessor):
                     exit(1)
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
         return examples
-
-    
     
     #------------- processing input from PICO element recognition results ---------#
 
-    def get_examples_from_pico(self, words, tags,sent_id="TEST"):
-        return self._create_examples_from_pico(words,tags,sent_id) 
+    def get_examples_from_pico(self, entity_list, entity_class_list,text_tagged,sent_id):
+        return self._create_examples_from_pico(entity_list, entity_class_list,text_tagged,sent_id) 
     
-    def _text2relation(self, sent_id, term_ann, text_tagged,relation_ann=[]):
+    def _text2relation(self, sent_id, term_ann, text_tagged,relation_ann=[]): #term_ann: entity_list
         text_tagged = re.sub("\s+\S+__I\-\w+__O","",text_tagged)
-        text_tagged = re.sub(r"\s*\S+__B\-(\w+)__(T\d+)",r" @\1$__\2",text_tagged)
+        text_tagged = re.sub(r"\s*\S+__B\-(\w+)__(\d+)",r" @\1$__\2",text_tagged)
         lines=" ".join(text_tagged.split(r'[;\n]'))
         relation_list = []
-        term_list = re.findall("__(T\d+)",text_tagged)
+        term_list = re.findall("__(\d+)",text_tagged)
         if len(term_list) <1:
             return []
         comb = list(combinations(term_list, 2))
@@ -305,12 +227,13 @@ class BlueBERTProcessor(DataProcessor):
             others = term_list.copy()
             others.remove(tup[0])
             others.remove(tup[1])
-             
+            if tup[0] == tup[1]:
+                continue
             index = sent_id+"."+tup[0]+"."+tup[1]
             # restore all other terms to text
             for t in others:
                 pattern = re.compile("\S+__"+t+" ")
-                sent_temp = re.sub(pattern,term_ann[t]+" ",sent_temp)
+                sent_temp = re.sub(pattern,term_ann[int(t)]+" ",sent_temp)
             for t in tup:
                 pattern = re.compile("__"+t)
                 sent_temp = re.sub(pattern,"",sent_temp)
@@ -322,41 +245,20 @@ class BlueBERTProcessor(DataProcessor):
                 output = [index, sent_temp,"0"] 
             relation_list.append(output) 
         return relation_list
-            
-    def _create_examples_from_pico(self, words, tags,sent_id="TEST"):
+    
+    
+   # =!!!!!!=====================!!!!!!!!!!! revisse this function ~~~~~~~~~~~~~          
+    def _create_examples_from_pico(self, entity_list, entity_class_list,text_tagged, sent_id):
         """ INPUT: one sentence pico results """
         examples = []
-        text_tagged = ""
-        word_tagged=[]
-        term_dict={}
-        entity_class_dict={}
-        count = 0
-        term_index =""
-        for word, tag in zip(words,tags):
-            if re.search("^B",tag):
-                count += 1
-                entity_class = re.sub("B-","",tag)
-
-                term_index = "T"+str(count)
-                term_dict[term_index] = [word]
-                entity_class_dict[term_index] = entity_class
-                word_tagged.append(word+"__"+tag+"__"+term_index)   #mild__B-Participant__T29 
-            elif re.search("^I",tag):
-                word_tagged.append(word+"__"+tag+"__O")             # HFABP__I-Outcome__O
-                term_dict[term_index].append(word)
-            else:
-                word_tagged.append(word)
-        for key in term_dict.keys():
-            term = " ".join(term_dict[key])
-            term_dict[key] = term
-        text_tagged = " ".join(word_tagged)
-        if ("B-Count" not in tags) and ("B-Observation" not in tags):
-            return [],[],term_dict,entity_class_dict
-        relation_list = self._text2relation(sent_id, term_dict, text_tagged)
+        if ("Count" not in entity_class_list) and ("Observation" not in entity_class_list ):
+            return [],[]
+        relation_list = self._text2relation(sent_id, entity_list, text_tagged)
+        
         for relation in relation_list:
             examples.append(InputExample(guid=relation[0], text_a=relation[1], text_b=None, label=relation[2]))
         else:
-            return examples, relation_list,term_dict,entity_class_dict
+            return examples, relation_list
 
 
 class PICOProcessor(BlueBERTProcessor):
@@ -632,10 +534,10 @@ class MED():
     def get_processor(self,task_name="pico"):
 
         processors = {"pico":PICOProcessor}
-        tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,config.init_checkpoint_dependency)
+        tokenization.validate_case_matches_checkpoint(config.do_lower_case,config.init_checkpoint_dependency)
         bert_config = modeling.BertConfig.from_json_file(config.bert_config_file)
 
-        if FLAGS.max_seq_length > bert_config.max_position_embeddings:
+        if config.max_seq_length > bert_config.max_position_embeddings:
             raise ValueError(
                 "Cannot use sequence length %d because the BERT model "
                 "was only trained up to sequence length %d" %
@@ -649,22 +551,21 @@ class MED():
         return processor
 
     def get_estimator(self,processor):
-        tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,config.init_checkpoint_dependency)
+        tokenization.validate_case_matches_checkpoint(config.do_lower_case,config.init_checkpoint_dependency)
         bert_config = modeling.BertConfig.from_json_file(config.bert_config_file)
-        tokenizer = tokenization.FullTokenizer(vocab_file=config.vocab_file, do_lower_case=FLAGS.do_lower_case)
+        tokenizer = tokenization.FullTokenizer(vocab_file=config.vocab_file, do_lower_case=config.do_lower_case)
         tpu_cluster_resolver = None
-        if FLAGS.use_tpu and FLAGS.tpu_name:
-            tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(FLAGS.tpu_name, zone=FLAGS.tpu_zone, project=FLAGS.gcp_project)
+
 
         is_per_host = tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2
         run_config = tf.contrib.tpu.RunConfig(
             cluster=tpu_cluster_resolver,
-            master=FLAGS.master,
+            master=None,
             model_dir=config.bluebert_dependency_dir,
-            save_checkpoints_steps=FLAGS.save_checkpoints_steps,
+            save_checkpoints_steps=1000,
             tpu_config=tf.contrib.tpu.TPUConfig(
-                iterations_per_loop=FLAGS.iterations_per_loop,
-                num_shards=FLAGS.num_tpu_cores,
+                iterations_per_loop=1000,
+                num_shards=8,
                 per_host_input_for_training=is_per_host))
 
         train_examples = None
@@ -675,26 +576,29 @@ class MED():
             bert_config=bert_config,
             num_labels=len(label_list),
             init_checkpoint=config.init_checkpoint_dependency,
-            learning_rate=FLAGS.learning_rate,
+            learning_rate=config.learning_rate,
             num_train_steps=num_train_steps,
             num_warmup_steps=num_warmup_steps,
-            use_tpu=FLAGS.use_tpu,
-            use_one_hot_embeddings=FLAGS.use_tpu)
+            use_tpu=False,
+            use_one_hot_embeddings=False)
  
         estimator = tf.contrib.tpu.TPUEstimator(
-            use_tpu=FLAGS.use_tpu,
+            use_tpu=False,
             model_fn=model_fn,
             config=run_config,
-            train_batch_size=FLAGS.train_batch_size,
-            eval_batch_size=FLAGS.eval_batch_size,
-            predict_batch_size=FLAGS.predict_batch_size)
+            train_batch_size=config.pred_batch_size,
+            eval_batch_size=config.pred_batch_size,
+            predict_batch_size=config.pred_batch_size)
         return estimator
 
 """
-MED = MED()
-MED_processor = MED.get_processor("pico")
-MED_estimator = MED.get_estimator(MED_processor)
-tokenizer = tokenization.FullTokenizer(vocab_file=config.vocab_file, do_lower_case=FLAGS.do_lower_case)
+#MED = MED()
+#MED_processor = MED.get_processor("pico")
+#MED_estimator = MED.get_estimator(MED_processor)
+tokenizer = tokenization.FullTokenizer(vocab_file=config.vocab_file, do_lower_case=config.do_lower_case)
+#tokenizer = tokenization.BasicTokenizer()
+text = "CONCLUSION Heavier women do not benefit from a higher dose of LA depot ( 7.5 vs. 3.75 mg ) for suppression of serum levels of estradiol ."
+print (tokenizer.tokenize(text))
 
 
 sents= [['Thirty-five', 'patients', 'returned', 'to', 'SCS', '.'], ['We', 'conclude', 'that', 'CMZ', 'is', 'effective', 'in', 'peripheral', 'neuropathic', 'pain', '.'], ['Morphine', 'obviously', 'requires', 'larger', 'individually', 'titrated', 'dosages', 'than', 'those', 'used', 'in', 'this', 'study', 'for', 'results', 'to', 'be', 'adequately', 'interpreted', '.']]
